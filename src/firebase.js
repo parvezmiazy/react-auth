@@ -3,11 +3,11 @@ import { initializeApp } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
   getAuth,
+  GoogleAuthProvider,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
-  singOut,
+  signInWithPopup,
 } from "firebase/auth";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -22,8 +22,9 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-
+const googleAuthProvider = new GoogleAuthProvider();
 const registerWithEmailAndPassword = async (email, password) => {
+  // eslint-disable-next-line no-useless-catch
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
@@ -33,8 +34,29 @@ const registerWithEmailAndPassword = async (email, password) => {
   }
 };
 const loginWithEmailAndPassword = async (email, password) => {
+  // eslint-disable-next-line no-useless-catch
   try {
     const res = await signInWithEmailAndPassword(auth, email, password);
+    const user = res.user;
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const sendPasswordReset = async (email) => {
+  // eslint-disable-next-line no-useless-catch
+  try {
+    await sendPasswordResetEmail(auth, email);
+  } catch (error) {
+    throw error;
+  }
+};
+
+const signInWithGoogle = async () => {
+  // eslint-disable-next-line no-useless-catch
+  try {
+    const res = await signInWithPopup(auth, googleAuthProvider);
     const user = res.user;
     return user;
   } catch (error) {
@@ -45,5 +67,6 @@ export {
   auth,
   loginWithEmailAndPassword,
   registerWithEmailAndPassword,
-  singOut,
+  sendPasswordReset,
+  signInWithGoogle,
 };

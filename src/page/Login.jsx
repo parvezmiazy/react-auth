@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { loginWithEmailAndPassword } from "../firebase";
+import { loginWithEmailAndPassword, signInWithGoogle } from "../firebase";
 const Register = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -15,6 +15,12 @@ const Register = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleSocialLogin = async () => {
+    const user = await signInWithGoogle();
+    console.log(user);
+    navigate("/home");
   };
   return (
     <div className="flex felx-col p-4 justify-center items-center">
@@ -49,11 +55,24 @@ const Register = () => {
         <button
           type="submit"
           onClick={handleLogin}
-          className="bg-black text-white p-1 rounded-md m-auto"
+          className="bg-black text-white p-1 rounded-md mx-2"
         >
           Login
         </button>
+        <button
+          type="submit"
+          onClick={handleSocialLogin}
+          className="bg-blue-500 text-white p-1 rounded-md"
+        >
+          Login with Google
+        </button>
       </form>
+      <p>
+        Forgot password?
+        <NavLink to="/reset" className="underline">
+          Reset Password
+        </NavLink>
+      </p>
       <p>
         Not have an account?
         <NavLink to="/register" className="underline">
